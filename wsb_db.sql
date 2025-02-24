@@ -1,167 +1,166 @@
-CREATE DATABASE wsb_db_grupa4 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE wsb_db_grupa4;
+CREATE DATABASE university_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE university_db;
 
-CREATE TABLE Placowka (
+CREATE TABLE Institution (
 Id INT AUTO_INCREMENT PRIMARY KEY,
-Nazwa VARCHAR(255) NOT NULL,
-Adres VARCHAR(255),
-Telefon VARCHAR(20),
+Name VARCHAR(255) NOT NULL,
+Address VARCHAR(255),
+Phone VARCHAR(20),
 Email VARCHAR(100),
-Rektor VARCHAR(255),
-Dziekan VARCHAR(255)
+Rector VARCHAR(255),
+Dean VARCHAR(255)
 );
 
-CREATE TABLE Pracownicy (
+CREATE TABLE Employees (
 Id INT AUTO_INCREMENT PRIMARY KEY,
-Imie VARCHAR(50) NOT NULL,
-Nazwisko VARCHAR(50) NOT NULL,
-Plec CHAR(1),
-Numer_telefonu VARCHAR(20),
-Adres_zamieszkania VARCHAR(255),
+FirstName VARCHAR(50) NOT NULL,
+LastName VARCHAR(50) NOT NULL,
+Gender CHAR(1),
+PhoneNumber VARCHAR(20),
+HomeAddress VARCHAR(255),
 PESEL CHAR(11) UNIQUE NOT NULL,
-Data_zatrudnienia DATE,
-Data_ustania_stosunku_pracy DATE,
-Numer_konta VARCHAR(26),
-Placowka_Id INT,
-FOREIGN KEY (Placowka_Id) REFERENCES Placowka(Id)
+HireDate DATE,
+EndDate DATE,
+BankAccount VARCHAR(26),
+Institution_Id INT,
+FOREIGN KEY (Institution_Id) REFERENCES Institution(Id)
 );
 
-CREATE TABLE Przedmioty (
+CREATE TABLE Subjects (
 Id INT AUTO_INCREMENT PRIMARY KEY,
-Nazwa VARCHAR(100) NOT NULL,
-Wykladowca_Id INT,
-FOREIGN KEY (Wykladowca_Id) REFERENCES Pracownicy(Id)
+Name VARCHAR(100) NOT NULL,
+Lecturer_Id INT,
+FOREIGN KEY (Lecturer_Id) REFERENCES Employees(Id)
 );
 
-CREATE TABLE Studenci (
+CREATE TABLE Students (
 Id INT AUTO_INCREMENT PRIMARY KEY,
-Imie  VARCHAR(50) NOT NULL,
-Nazwisko VARCHAR(50) NOT NULL,
-Plec CHAR(1),
+FirstName  VARCHAR(50) NOT NULL,
+LastName VARCHAR(50) NOT NULL,
+Gender CHAR(1),
 PESEL CHAR(11) UNIQUE NOT NULL,
-Data_urodzenia DATE
+BirthDate DATE
 );
 
-CREATE TABLE Grupy (
+CREATE TABLE Groups (
 Id INT AUTO_INCREMENT PRIMARY KEY,
-Nazwa VARCHAR(100) NOT NULL,
-Rocznik INT NOT NULL,
-Opiekun_Id INT,
-FOREIGN KEY (Opiekun_Id) REFERENCES Pracownicy(Id)
+Name VARCHAR(100) NOT NULL,
+Year INT NOT NULL,
+Supervisor_Id INT,
+FOREIGN KEY (Supervisor_Id) REFERENCES Employees(Id)
 );
 
-CREATE TABLE Grupy_Studenci (
-Grupa_Id INT,
+CREATE TABLE Groups_Students (
+Group_Id INT,
 Student_Id INT,
-PRIMARY KEY (Grupa_Id, student_Id),
-FOREIGN KEY (grupa_Id) REFERENCES Grupy(Id),
-FOREIGN KEY (Student_Id) REFERENCES Studenci(Id)
+PRIMARY KEY (Group_Id, Student_Id),
+FOREIGN KEY (Group_Id) REFERENCES Groups(Id),
+FOREIGN KEY (Student_Id) REFERENCES Students(Id)
 );
 
-CREATE TABLE Dziennik (
+CREATE TABLE Gradebook (
 Id INT AUTO_INCREMENT PRIMARY KEY,
 Student_Id INT,
-Przedmiot_Id INT,
-Ocena_czastkowa DECIMAL(5,2),
-Ocena_koncowa DECIMAL(5,2),
-Semestr INT NOT NULL,
-FOREIGN KEY (Student_Id) REFERENCES Studenci(Id),
-FOREIGN KEY (Przedmiot_Id) REFERENCES Przedmioty(Id)
+Subject_Id INT,
+PartialGrade DECIMAL(5,2),
+FinalGrade DECIMAL(5,2),
+Semester INT NOT NULL,
+FOREIGN KEY (Student_Id) REFERENCES Students(Id),
+FOREIGN KEY (Subject_Id) REFERENCES Subjects(Id)
 );
 
-INSERT INTO Placowka (Nazwa, Adres, Telefon, Email, Rektor, Dziekan)
+-- Inserting sample data
+INSERT INTO Institution (Name, Address, Phone, Email, Rector, Dean)
 VALUES
-    ('Uniwersytet Warszawski', 'ul. Krakowskie Przedmieście 26/28, 00-927 Warszawa', '22 123 45 67', 'kontakt@uw.edu.pl', 'Prof. Jan Kowalski', 'Dr Anna Nowak'),
-    ('Uniwersytet Jagielloński', 'ul. Gołębia 24, 31-007 Kraków', '12 234 56 78', 'kontakt@uj.edu.pl', 'Prof. Marek Wiśniewski', 'Dr Katarzyna Zielińska');
+    ('University of Warsaw', 'ul. Krakowskie Przedmieście 26/28, 00-927 Warsaw', '22 123 45 67', 'contact@uw.edu.pl', 'Prof. John Smith', 'Dr. Anna Brown'),
+    ('Jagiellonian University', 'ul. Gołębia 24, 31-007 Krakow', '12 234 56 78', 'contact@uj.edu.pl', 'Prof. Mark Wilson', 'Dr. Catherine Green');
 
-INSERT INTO Pracownicy (Imie, Nazwisko, Plec, Numer_telefonu, Adres_zamieszkania, PESEL, Data_zatrudnienia, Data_ustania_stosunku_pracy, Numer_konta, Placowka_Id)
+INSERT INTO Employees (FirstName, LastName, Gender, PhoneNumber, HomeAddress, PESEL, HireDate, EndDate, BankAccount, Institution_Id)
 VALUES
-    ('Jan', 'Kowalski', 'M', '123456789', 'ul. Wiatraczna 15, 04-130 Warszawa', '85012345678', '2010-09-01', NULL, '12345678901234567890123456', 1),
-    ('Anna', 'Nowak', 'K', '987654321', 'ul. Pięciomorgowa 25, 05-150 Kraków', '87023456789', '2015-03-15', NULL, '98765432109876543210987654', 2);
+    ('John', 'Smith', 'M', '123456789', 'ul. Wiatraczna 15, 04-130 Warsaw', '85012345678', '2010-09-01', NULL, '12345678901234567890123456', 1),
+    ('Anna', 'Brown', 'F', '987654321', 'ul. Pięciomorgowa 25, 05-150 Krakow', '87023456789', '2015-03-15', NULL, '98765432109876543210987654', 2);
 
-INSERT INTO Przedmioty (Nazwa, Wykladowca_Id)
+INSERT INTO Subjects (Name, Lecturer_Id)
 VALUES
-    ('Matematyka', 1),
-    ('Fizyka', 2);
+    ('Mathematics', 1),
+    ('Physics', 2);
 
-INSERT INTO Studenci (Imie, Nazwisko, Plec, PESEL, Data_urodzenia)
+INSERT INTO Students (FirstName, LastName, Gender, PESEL, BirthDate)
 VALUES
-    ('Piotr', 'Kaczmarek', 'M', '12345678901', '1998-04-12'),
-    ('Magdalena', 'Wiśniewska', 'K', '98765432101', '2000-09-24');
+    ('Peter', 'Kaczmarek', 'M', '12345678901', '1998-04-12'),
+    ('Magdalena', 'Wilson', 'F', '98765432101', '2000-09-24');
 
-INSERT INTO Grupy (Nazwa, Rocznik, Opiekun_Id)
+INSERT INTO Groups (Name, Year, Supervisor_Id)
 VALUES
-    ('Grupa A', 2021, 1),
-    ('Grupa B', 2021, 2);
+    ('Group A', 2021, 1),
+    ('Group B', 2021, 2);
 
-INSERT INTO Grupy_Studenci (Grupa_Id, Student_Id)
+INSERT INTO Groups_Students (Group_Id, Student_Id)
 VALUES
     (1, 1),
     (2, 2);
 
-INSERT INTO Dziennik (Student_Id, Przedmiot_Id, Ocena_czastkowa, Ocena_koncowa, Semestr)
+INSERT INTO Gradebook (Student_Id, Subject_Id, PartialGrade, FinalGrade, Semester)
 VALUES
     (1, 1, 4.5, 5.0, 1),
     (2, 2, 3.0, 3.5, 1);
-    
--- Simple Queries
--- Displaying all establishments:
-SELECT * FROM Placowka;
--- Display all employees working at a specific facility (e.g., with Id=1):
-SELECT * FROM pracownicy WHERE Placowka_Id = 1;
+
+-- Queries
+-- Displaying all institutions:
+SELECT * FROM Institution;
+-- Display all employees working at a specific institution (e.g., with Id=1):
+SELECT * FROM Employees WHERE Institution_Id = 1;
 -- List of all students:
-SELECT * FROM studenci;
+SELECT * FROM Students;
 
 -- Joining tables
--- List of employees and their facilities:
-SELECT p.imie, p.nazwisko, pl.nazwa
-FROM Pracownicy p
-JOIN Placowka pl ON p.placowka_Id = pl.Id;
--- List of students and groups to which they belong:
-SELECT s.imie, s.nazwisko, g.nazwa
-FROM studenci s 
-JOIN grupy_studenci gs on s.Id = gs.Student_Id
-JOIN grupy g on gs.Grupa_Id = g.Id;
+-- List of employees and their institutions:
+SELECT e.FirstName, e.LastName, i.Name
+FROM Employees e
+JOIN Institution i ON e.Institution_Id = i.Id;
+-- List of students and groups they belong to:
+SELECT s.FirstName, s.LastName, g.Name
+FROM Students s 
+JOIN Groups_Students gs on s.Id = gs.Student_Id
+JOIN Groups g on gs.Group_Id = g.Id;
 -- List of subjects and lecturers who teach them:
-SELECT prz.nazwa, p.imie, p.nazwisko
-FROM przedmioty prz
-JOIN pracownicy p ON prz.Wykladowca_Id = p.Id;
+SELECT sub.Name, e.FirstName, e.LastName
+FROM Subjects sub
+JOIN Employees e ON sub.Lecturer_Id = e.Id;
 
 -- Queries with filters
--- Students with a final grade higher than 4.0 in the journal:
-SELECT d.Id, d.ocena_koncowa, s.imie, s.nazwisko
-FROM dziennik d 
-JOIN studenci s ON d.Student_Id = s.Id
-WHERE d.Ocena_koncowa > 4.0;
+-- Students with a final grade higher than 4.0 in the gradebook:
+SELECT g.Id, g.FinalGrade, s.FirstName, s.LastName
+FROM Gradebook g 
+JOIN Students s ON g.Student_Id = s.Id
+WHERE g.FinalGrade > 4.0;
 -- Employees hired after 2020:
-SELECT data_zatrudnienia
-FROM pracownicy 
-WHERE data_zatrudnienia > 2020-01-01;
+SELECT HireDate
+FROM Employees 
+WHERE HireDate > '2020-01-01';
 
 -- Students who obtained a final grade higher than the average final grade in their group
-
-SELECT s. imie, s.nazwisko, g.nazwa, d.ocena_koncowa
-FROM dziennik d 
-JOIN studenci s ON d.Student_Id = s.Id
-JOIN grupy_studenci gs ON s.Id = gs.Student_Id
-JOIN grupy g ON gs.Grupa_Id = g.Id
-WHERE d.Ocena_koncowa > (
-SELECT AVG(d1.Ocena_koncowa)
-FROM Dziennik d1
-JOIN grupy_studenci gs1 on d1.Student_Id = gs1.Student_Id
-WHERE gs1.Student_Id = gs.Grupa_Id
+SELECT s.FirstName, s.LastName, g.Name, gr.FinalGrade
+FROM Gradebook gr 
+JOIN Students s ON gr.Student_Id = s.Id
+JOIN Groups_Students gs ON s.Id = gs.Student_Id
+JOIN Groups g ON gs.Group_Id = g.Id
+WHERE gr.FinalGrade > (
+SELECT AVG(gr1.FinalGrade)
+FROM Gradebook gr1
+JOIN Groups_Students gs1 on gr1.Student_Id = gs1.Student_Id
+WHERE gs1.Student_Id = gs.Group_Id
 );
 
--- List of all employees with the name of the facility where they work
-SELECT p.imie, p.nazwisko, pl.nazwa
-FROM pracownicy p 
-JOIN placowka pl
-ON p.Placowka_Id = pl.Id;
+-- List of all employees with the name of the institution where they work
+SELECT e.FirstName, e.LastName, i.Name
+FROM Employees e 
+JOIN Institution i
+ON e.Institution_Id = i.Id;
 
 -- List of students who do not have grades
-SELECT s.imie, s.nazwisko
-FROM studenci s 
-JOIN Dziennik D 
-ON s.Id = d.student_Id
-WHERE d.Id IS NULL;
-    
+SELECT s.FirstName, s.LastName
+FROM Students s 
+LEFT JOIN Gradebook g 
+ON s.Id = g.Student_Id
+WHERE g.Id IS NULL;
