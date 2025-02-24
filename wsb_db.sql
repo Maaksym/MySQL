@@ -104,41 +104,41 @@ VALUES
     (1, 1, 4.5, 5.0, 1),
     (2, 2, 3.0, 3.5, 1);
     
--- Proste zapytania
--- Wyświetlenie wszystkich placówek:
+-- Simple Queries
+-- Displaying all establishments:
 SELECT * FROM Placowka;
--- Wyświetlenie wszystkich pracowników zatrudnionych w konkretnej placówce (np. o Id=1):
+-- Display all employees working at a specific facility (e.g., with Id=1):
 SELECT * FROM pracownicy WHERE Placowka_Id = 1;
--- Lista wszystkich studentów:
+-- List of all students:
 SELECT * FROM studenci;
 
--- Łączenie tabel
--- Lista pracowników i ich placówek:
+-- Joining tables
+-- List of employees and their facilities:
 SELECT p.imie, p.nazwisko, pl.nazwa
 FROM Pracownicy p
 JOIN Placowka pl ON p.placowka_Id = pl.Id;
--- Lista studentów i grup, do których należą:
+-- List of students and groups to which they belong:
 SELECT s.imie, s.nazwisko, g.nazwa
 FROM studenci s 
 JOIN grupy_studenci gs on s.Id = gs.Student_Id
 JOIN grupy g on gs.Grupa_Id = g.Id;
--- Lista przedmiotów i wykładowców, którzy je prowadzą:
+-- List of subjects and lecturers who teach them:
 SELECT prz.nazwa, p.imie, p.nazwisko
 FROM przedmioty prz
 JOIN pracownicy p ON prz.Wykladowca_Id = p.Id;
 
--- Zapytania z filtrami
--- Studenci z oceną końcową wyższą niż 4.0 w dzienniku:
+-- Queries with filters
+-- Students with a final grade higher than 4.0 in the journal:
 SELECT d.Id, d.ocena_koncowa, s.imie, s.nazwisko
 FROM dziennik d 
 JOIN studenci s ON d.Student_Id = s.Id
 WHERE d.Ocena_koncowa > 4.0;
--- Pracownicy zatrudnieni po 2020 roku:
+-- Employees hired after 2020:
 SELECT data_zatrudnienia
 FROM pracownicy 
 WHERE data_zatrudnienia > 2020-01-01;
 
--- Studenci, którzy uzyskali ocenę końcową wyższą niż średnia ocena końcowa w swojej grupie
+-- Students who obtained a final grade higher than the average final grade in their group
 
 SELECT s. imie, s.nazwisko, g.nazwa, d.ocena_koncowa
 FROM dziennik d 
@@ -152,13 +152,13 @@ JOIN grupy_studenci gs1 on d1.Student_Id = gs1.Student_Id
 WHERE gs1.Student_Id = gs.Grupa_Id
 );
 
--- Lista wszystkich pracowników wraz z nazwą placówki, w której pracują
+-- List of all employees with the name of the facility where they work
 SELECT p.imie, p.nazwisko, pl.nazwa
 FROM pracownicy p 
 JOIN placowka pl
 ON p.Placowka_Id = pl.Id;
 
--- Wykaz studentów, którzy nie mają ocen
+-- List of students who do not have grades
 SELECT s.imie, s.nazwisko
 FROM studenci s 
 JOIN Dziennik D 
